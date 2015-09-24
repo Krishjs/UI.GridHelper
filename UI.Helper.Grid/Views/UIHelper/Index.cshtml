@@ -1,0 +1,67 @@
+﻿@using CityDataSource
+
+@{
+    var grid = new CustomGrid<City>();
+    grid.CallbackValues.ActionName = "GetCitys";
+    grid.CallbackValues.ControllerName = "UIHelper";
+    grid.Name = "PagingCityGrid";
+    grid.PageSettings.PageSize = 10;
+    grid.PageSettings.IsPageable = true;
+    grid.ShowRefresh = true;
+    grid.SelectionSettings.SelectionMode = SelectionMode.Single;
+    grid.SelectionSettings.SelectionType = SelectionType.Row;    
+    grid.ShowRefresh = true;
+    grid.SelectionSettings.CanSelect = true;    
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "",
+        Title = "Select",
+        Width = 140,
+        IsVisible = true,
+        FilterSettings = new FilterSettings { IsFilterable = false },
+        ClientTemplate = "<input type='checkbox' id=\"checkbox#=data.uid#\"  name='checkall' onclick='checkboxClicked(this)' /> "
+    });
+
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "Name",
+        Title = "Name",
+        Width = 220,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "contains", IsFilterByRow = true },
+
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.Name",
+        Title = "State",
+        Width = 190,
+        IsVisible = true
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.CountryInfo.Name",
+        Title = "Country",
+        Width = 190,
+        IsVisible = true,
+
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.CountryInfo.Code",
+        Title = "Country Code",
+        Width = 190,
+        IsVisible = true
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "Latitude",
+        Title = "Latitude",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+    });
+}
+@Html.OVCustomGrid(grid)
+}
+
