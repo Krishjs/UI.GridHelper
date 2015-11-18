@@ -13,7 +13,7 @@ namespace UI.Helper.Grid
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            Redis.RedisHelper.RedisConnectionAndUpload(connectionString: "127.0.0.1:6379");
+            Redis.RedisHelper.RedisConnectionAndUpload(connectionString: "172.17.194.68:6379");
         }
     }
 }

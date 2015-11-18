@@ -8,20 +8,13 @@
     grid.PageSettings.PageSize = 10;
     grid.PageSettings.IsPageable = true;
     grid.ShowRefresh = true;
-    grid.SelectionSettings.SelectionMode = SelectionMode.Single;
-    grid.SelectionSettings.SelectionType = SelectionType.Row;    
+    grid.SelectionSettings.SelectionMode = SelectionMode.Multiple;
+    grid.SelectionSettings.SelectionType = SelectionType.CheckBox;
     grid.ShowRefresh = true;
-    grid.SelectionSettings.CanSelect = true;    
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "",
-        Title = "Select",
-        Width = 140,
-        IsVisible = true,
-        FilterSettings = new FilterSettings { IsFilterable = false },
-        ClientTemplate = "<input type='checkbox' id=\"checkbox#=data.uid#\"  name='checkall' onclick='checkboxClicked(this)' /> "
-    });
-
+    grid.SelectionSettings.CanSelect = true;
+    grid.SelectionSettings.IsSelectAll = true;
+    grid.ToolBarSettings.ShowFilter = true;
+    grid.IdProperty = "Id";
     grid.GridColumns.Add(new GridColumn()
     {
         ColumnName = "Name",
@@ -61,7 +54,16 @@
         IsVisible = true,
         FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
     });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "ValidFrom",
+        Title = "Valid From",
+        Width = 110,
+        IsVisible = true,
+        DisplayFormat = "dd-MMM-yyyy",
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+    });
 }
 @Html.OVCustomGrid(grid)
-}
+
 
