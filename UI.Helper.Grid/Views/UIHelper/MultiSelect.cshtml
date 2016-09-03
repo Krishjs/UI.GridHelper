@@ -1,0 +1,29 @@
+﻿@model CityDataSource.City
+@using Kendo.Mvc.UI
+
+@Styles.Render("~/Content/css/default/bootstrap", "~/Content/kendo/styles", "~/Content/css/custom/styles")
+
+@*@(Html.Kendo().ComboBoxFor(m => m.StateInfo).AutoBind(false).DataValueField("Id").DataTextField("Name").GroupTemplate("<strong>#:data#</strong>")
+    .DataSource(dt => dt.Custom()
+                             .PageSize(30)
+                             .Group(p => p.Add("CountryInfo.Name", typeof(string)))
+                             .ServerGrouping(enabled: true)
+                             .ServerFiltering(enabled: true)
+                             .ServerPaging(enabled: true)
+                             .Type(type: "aspnetmvc-ajax")
+                             .Transport(t => t.Read(rd => rd.Action("GetStates", "UIHelper")))
+                             .Schema(schema => schema.Data(data: "Data").Total(total: "Total")))
+                             .Virtual(v => v.ItemHeight(25).ValueMapper(handler: "function(options){ options.success(-1); }")))*@
+@(Html.Kendo().MultiSelectFor(m => m.ZipCodes).AutoBind(false).DataValueField("Id").DataTextField("CityZip").Height((25 * 30) / 4).Filter(FilterType.StartsWith)
+        .DataSource(dt => dt.Custom()
+                                 .PageSize(30)
+                                 .ServerGrouping(enabled: true)
+                                 .ServerFiltering(enabled: true)
+                                 .ServerPaging(enabled: true)
+                                 .Type(type: "aspnetmvc-ajax")
+                                 .Transport(t => t.Read(rd => rd.Action("GetZipList", "UIHelper")))
+                                 .Schema(schema => schema.Data(data: "Data").Total(total: "Total")))
+                                 .Virtual(v => v.ItemHeight(25).ValueMapper("function(){ debugger; }")))
+
+@*@Html.OVMultipleSelectFor(m => m.ZipCodes, new MultipleSelectSettings() { Custom = true, PageSize = 30, ValueField = "Id", TextField = "CityZip", ControllerName = "UIHelper", MethodName = "GetZipList" })*@
+

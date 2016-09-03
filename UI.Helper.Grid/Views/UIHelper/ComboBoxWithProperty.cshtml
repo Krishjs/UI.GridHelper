@@ -1,0 +1,6 @@
+﻿
+@model CityDataSource.City
+@using Kendo.Mvc.UI
+
+@*@Html.OVComboBoxFor(m => m.StateInfo.Code, new ComboBoxSettings() { Custom = true, ControllerName = "UIHelper", MethodName = "GetStatesWithPaginationCode" })*@
+@(Html.Kendo().ComboBoxFor(m => m.StateInfo.Code).AutoBind(false).DataSource(d => d.Custom().ServerPaging(true).PageSize(30).Transport(t=>t.Read("GetStatesWithPaginationCode", "UIHelper"))))

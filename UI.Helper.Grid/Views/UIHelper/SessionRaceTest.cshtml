@@ -1,0 +1,20 @@
+﻿
+<script type="text/javascript">
+    var time  = null;
+    var globalData = [];
+    var i = 0;
+    function LogDetails(data) {        
+        i++;
+        globalData.push(data);
+        console.table(data,[]);
+        if (i == 4) { console.table(globalData); clearInterval(time); }
+    }
+    var j = 0;    
+    $(document).ready(function () {
+        $.get('@Url.Action("MethodWithSessionOne","UIHelper")?waitTime=2', LogDetails);        
+        $.get('@Url.Action("MethodWithOutSessionOne", "UIHelper")?waitTime=1', LogDetails);
+        $.get('@Url.Action("MethodWithSessionTwo", "UIHelper")?waitTime=2', LogDetails);
+        $.get('@Url.Action("MethodWithOutSessionTwo", "UIHelper")?waitTime=1', LogDetails);
+       // time = setInterval(function () { console.log(j++); }, 1000);
+    });
+</script>

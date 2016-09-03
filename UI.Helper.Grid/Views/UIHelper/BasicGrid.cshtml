@@ -1,0 +1,59 @@
+﻿@model List<CityDataSource.City>
+
+@{
+    var grid = new Msc.Framework.UI.Helper.Grid<CityDataSource.City>();
+    grid.FilterSettings.IsFilterable = false;
+    grid.Name = "cargocontainersgrid";
+    grid.SelectionSettings.CanSelect = true;
+    grid.CandoServerOperation = false;    
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "Name",
+        Title = "Name",
+        Width = 200,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = true, DefaultOperator = "contains", IsFilterByRow = true },
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.Name",
+        Title = "State",
+        Width = 180,
+        IsVisible = true
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.CountryInfo.Name",
+        Title = "Country",
+        Width = 180,
+        IsVisible = true,
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "StateInfo.CountryInfo.Code",
+        Title = "Country Code",
+        Width = 100,
+        IsVisible = true
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "Latitude",
+        Title = "Latitude",
+        Width = 70,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "ValidFrom",
+        Title = "Valid From",
+        Width = 110,
+        IsVisible = true,
+        DisplayFormat = "dd-MMM-yyyy",
+         
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+    });
+
+
+}
+@Html.OVGrid(grid,Model)

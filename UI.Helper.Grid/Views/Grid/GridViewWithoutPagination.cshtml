@@ -1,0 +1,170 @@
+﻿@model IEnumerable<City>
+@using CityDataSource;
+@using Kendo.Mvc.UI;
+<h1>Pagable Grid</h1>
+@(Html.OVButton("AddNew")
+                        .SpriteCssClass("icon-add")
+                        .SetHtmlAttributes(new { @class = "k-button", @type = "button", data_parameter = "toUpdateOrDelete" ,  })
+                        .Content("ADD NEW").GetHtml())
+
+@*<input class="cmn-toggle cmn-toggle-round" id="cmn_toggle_IsIMO1" onchange="MSCJS.HTMLHelpers.ClientEvents.Toggle.onChange(this,'IsIMO1','Y','Yes|No')" type="checkbox">
+    <label class="pull-left" for="cmn_toggle_IsIMO1"> </label>
+    <label class="control-label pull-left" for="IsIMO1" id="lbl_toggle_IsIMO1">Yes</label>
+    <input class="ovhidden" id="IsIMO1" name="IsIMO1" type="hidden" value="Y">
+    <script>MSCJS.HTMLHelpers.ClientEvents.Toggle.onLoad('IsIMO1','Y','Yes|No','Y|N')</script>
+<div id="mvvmtemplate">    
+    <input type="checkbox" data-bind="" />
+</div>*@
+
+@{
+    var grid = new Msc.Framework.UI.Helper.Grid<City>();
+    grid.FilterSettings.IsFilterable = false;
+    grid.Name = "cargocontainersgrid";
+    grid.SelectionSettings.CanSelect = false;
+    grid.PageSettings.PageSize = 10;
+    grid.PageSettings.IsPageable = false;
+    grid.CandoServerOperation = false;
+    grid.SelectionSettings.SelectionMode = SelectionMode.Multiple;
+    grid.SelectionSettings.SelectionType = SelectionType.Cell;
+    grid.IdProperty = "Id";
+    grid.IsExcelGrid = true;
+    grid.IsReadOnly = true;
+    grid.AddNewButton = "#AddNew";
+    grid.StatusProperty = "Status";
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "Name",
+        Title = "Name",
+        Width = 200,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = true, DefaultOperator = "contains", IsFilterByRow = true }
+    });
+
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "StateInfo.Name",
+        Title = "State",
+        Width = 180,
+        IsVisible = true,
+        ClientTemplate = "#=MSCJS.Template.ComboBox({url:'/UIHelper/GetStates',bindText:'StateInfo.Name', custom:false, valuePrimitive:'false',text:'Name',value:'Id',bind:'StateInfo',key:'" + grid.IdProperty + "',suffix:'StateInfo'},data)#"
+    });
+
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "IsSelected",
+        Title = "State ",
+        Width = 180,
+        IsVisible = true,
+        ClientTemplate = "#= MSCJS.Template.CheckBox({ bind:'IsSelected', field: data.IsSelected ? 'Yes' : 'No' ,key:'" + grid.IdProperty + "',suffix:'IsSelected'},data) #"
+    });
+
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "HasFlag",
+        Title = "State ",
+        Width = 180,
+        IsVisible = true,
+        ClientTemplate = "#= MSCJS.Template.Toggle({ bind:'HasFlag', field: data.IsSelected ? 'Yes' : 'No', key:'" + grid.IdProperty + "',suffix:'HasFlag'},data) #"
+    });
+
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "StateInfo.CountryInfo.Name",
+        Title = "Country",
+        Width = 180,
+        IsVisible = true,
+        ClientTemplate = "#=MSCJS.Template.ComboBox({url:'/UIHelper/GetCountries',bindText:'StateInfo.CountryInfo.Name',valuePrimitive:'false',text:'Name',value:'Id',bind:'StateInfo.CountryInfo',key:'" + grid.IdProperty + "',suffix:'CountryInfo'},data)#"
+    });
+
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "StateInfo.CountryInfo.Code",
+        Title = "Country Code",
+        Width = 100,
+        IsVisible = true,
+        ClientTemplate = "#=MSCJS.Template.Label({ bind:'StateInfo.CountryInfo.Code'})#"
+    });
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "Latitude",
+        Title = "Latitude",
+        Width = 70,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.TextBox({ bind:'Latitude',bindText:'Latitude',cls:'k-textbox',key:'" + grid.IdProperty + "',suffix:'Latitude'},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "Longitude",
+        Title = "Longitude",
+        Width = 70,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.NumericTextBox({ bind:'Longitude',bindText:'Latitude',step:'1',key:'" + grid.IdProperty + "',suffix:'Longitude'},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "ValidFrom",
+        Title = "Valid From",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.DatePicker({ bindText:'ValidFrom',key:'" + grid.IdProperty + "', suffix:'ValidFrom', bind:'ValidFrom'},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "ValidTo",
+        Title = "Valid To",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.DatePicker({ bindText:'ValidTo',key:'" + grid.IdProperty + "', suffix:'ValidTo', bind:'ValidTo'},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        ColumnName = "ZipCodes",
+        Title = "Zip Code",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.MultiSelect({ field: data.ZipCodes ? data.ZipCodes.map(z => z.CityZip).join(',') : '',url:'/UIHelper/GetZipList',valuePrimitive:'false', custom: false, text:'CityZip',value:'Id',bind:'ZipCodes',key:'" + grid.IdProperty + "',suffix:'ZipCodes',events:function () { Inline.GetZipCodes(); }},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        Title = "#",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.EditOrDelete({grid:'cargocontainersgrid',param:'toUpdateOrDelete',text:'Delete',Status:'" + grid.StatusProperty + "'},data)#"
+    });
+    grid.GridColumns.Add(new GridColumn()
+    {
+        Title = "Delete",
+        Width = 110,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" },
+        ClientTemplate = "#=MSCJS.Template.Cross({grid:'cargocontainersgrid',param:'toUpdateOrDelete',text:'Delete',Status:'" + grid.StatusProperty + "'},data)#"
+    });
+}
+@(Html.OVGrid(grid, Model))
+
+<script type="text/javascript">
+    var Inline = {
+        GetZipCodes: function () {
+            var source = [];
+            source.push({
+                Id: 1,
+                CityZip: '627354'
+            });
+            source.push({
+                Id: 2,
+                CityZip: '627355'
+            });
+            source.push({
+                Id: 3,
+                CityZip: '627356'
+            });
+            return source;
+        }
+    }
+</script>

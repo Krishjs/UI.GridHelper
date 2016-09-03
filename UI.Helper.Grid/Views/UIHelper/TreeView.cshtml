@@ -1,0 +1,232 @@
+﻿
+<style>
+    #checkedFiles {
+        height: 500px;
+    }
+
+    .k-popup .k-item > .k-group {
+        position: relative;
+    }
+</style>
+<div class="boxFix">
+    <div class="col-xs-12 nopadding">
+        <div class="demo-section k-content col-xs-12 nopadding borderbottom marginbottom15">
+            <div class="marginbottom15">
+                @Html.OVTextBox("SearchChargeCode", string.Empty, new { @id = "searchChargeCode", @placeholder = "Search Charges" })
+            </div>
+            <div class="col-xs-12 nopadding text-left">
+                @{
+                    var treeView = new TreeViewSettings();
+                    treeView.Name = "ChargeCodeTree";
+                    treeView.TextField = "Name";
+                    treeView.NodeIcon = "Icon";
+                    treeView.Id = "Id";
+                    treeView.Children = "ChildNode";
+                    treeView.LoadOnDemand = false;
+                    treeView.HasChildren = "HasChildren";
+                    treeView.ActionName = "GetCityForTreeView";
+                    treeView.RouteValues = new { status = "All" };
+                    treeView.ParameterMap = "function(e) { return ChargeCodeTree.ParameterMap(e); }";
+                    treeView.HtmlAttributes.Add(key: "style", value: "height:96% !important;");
+                    treeView.CheckBoxSettings.Enabled = true;
+                    treeView.CheckBoxSettings.CheckChildren = true;
+                    treeView.CheckBoxSettings.Template = "<input name='#= item.Id # ~ #= item.Level #' type='checkbox' onclick='OnCheckboxClick(this)' />";
+                }
+                @Html.OVTreeView(treeView)
+            </div>
+        </div>
+        <div class="col-xs-12 nopadding margintop2 text-right">
+            @(Html.OVButton("DTDAPPLY").SetTag("button").OnClick("ApplyCode").SpriteCssClass("").SetHtmlAttributes(new { @class = "k-button k-primarybtn marginright0", @type = "button" }).Content("APPLY").GetHtml())
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function OnChargeCodeTreeExpand(e) {
+        ChargeCodeTree.Select(e);
+    }
+
+    function OnChargeCodeTreeDataBound(e) {
+        //var treeview = $('#ChargeCodeTree').data('kendoTreeView');
+        //treeview.expand(".k-item");
+    };
+
+    function OnCheckboxClick(e) {
+        var paramArr = e.name;
+        var params = paramArr.split('~');
+        var level = params[1].trim();
+        var id = params[0].trim();
+        if (e.checked) {
+            if (parseInt(level) == 2) {
+                chargegroups.push(id);
+            }
+            else if (parseInt(level) == 3) {
+                chargecodes.push(id);
+            }
+            else {
+                chargegroups.push("-1");
+            }
+        }
+        else {
+            if (parseInt(level) == 2) {
+                for (var i = 0; i < chargegroups.length; i++) {
+                    if (chargegroups[i] == id) {
+                        chargegroups.splice(i, 1);
+                    }
+                }
+            }
+            else if (parseInt(level) == 3) {
+                for (var i = 0; i < chargecodes.length; i++) {
+                    if (chargecodes[i] == id) {
+                        chargecodes.splice(i, 1);
+                    }
+                }
+            }
+            else {
+                chargegroups.splice(0, 1);
+            }
+        }
+    }
+
+    var ChargeCodeTree = {
+        Component: function () {
+            return $('#ChargeCodeTree').data('kendoTreeView');
+        },
+        CurrentSelection: {
+            Type: ""
+        },
+        Select: function (e) {
+            this.CurrentSelection = e.sender.dataItem(e.node);
+        },
+        ParameterMap: function (args) {
+            args["level"] = this.CurrentSelection.Level;
+            return args;
+        }
+    }
+
+    function ApplyCode() {
+        var lineItemChargeCodeGrid = $('#LineItemChargeCodeGrid').data('kendoGrid');
+        lineItemChargeCodeGrid.dataSource.read({ businessCode: null, chargeGroupCodeSearch: null, chargeGroups: chargegroups, chargeCodes: chargecodes, recordStatus: '' });
+        ResetChargeGroupsCode();
+    }
+
+    function ResetChargeGroupsCode() {
+        chargecodes = [];
+        chargegroups = [];
+        $("#treeView_tt_active").hide();
+    }
+
+    $(document).ready(function () {
+        $('#ChargeCodeTree ul:first').attr('id', 'treeview');
+    });
+
+    $('#searchChargeCode').on('keyup', function () {
+        //$('#ChargeCodeTree ul:first').attr('id', 'treeview');
+
+        InitSearch("#ChargeCodeTree", "#searchChargeCode");
+
+        function InitSearch(treeViewId, searchInputId) {
+            var tv = kendo.widgetInstance($(treeViewId));
+
+            $(searchInputId).on('keyup', function () {
+                $(treeViewId + ' li.k-item').show();
+
+                $('span.k-in > span.highlight').each(function () {
+                    $(this).parent().text($(this).parent().text());
+                });
+
+                // ignore if no search term
+                if ($.trim($(this).val()) === '') {
+                    return;
+                }
+
+                var term = this.value.toUpperCase();
+                var tlen = term.length;
+
+                $(treeViewId + ' span.k-in').each(function (index) {
+                    var text = $(this).text();
+                    var html = '';
+                    var q = 0;
+                    var p;
+
+                    while ((p = text.toUpperCase().indexOf(term, q)) >= 0) {
+                        html += text.substring(q, p) + '<span class="highlight">' + text.substr(p, tlen) + '</span>';
+                        q = p + tlen;
+                    }
+
+                    if (q > 0) {
+                        html += text.substring(q);
+                        $(this).html(html);
+
+                        $(this).parentsUntil('.k-treeview').filter('.k-item').each(function (index, element) {
+                            tv.expand($(this));
+                            $(this).data('SearchTerm', term);
+                        });
+                    }
+                });
+
+                $(treeViewId + ' li.k-item:not(:has(".highlight"))').hide();
+            });
+        }
+
+    });
+</script>
+@*@{
+        var treeView = new TreeViewSettings();
+        treeView.Name = "TrreView";
+        treeView.TextField = "text";
+        treeView.NodeIcon = "Icon";
+        treeView.Id = "id";
+        treeView.Children = "items";
+        treeView.LoadOnDemand = false;
+        treeView.HasChildren = "hasChildren";
+        treeView.ActionName = "GetCityForTreeView";
+        treeView.RouteValues = new { status = "All" };
+        treeView.HtmlAttributes.Add(key: "style", value: "height:96% !important;");
+        treeView.CheckBoxSettings.Enabled = true;
+        treeView.CheckBoxSettings.CheckChildren = true;
+    }
+    @Html.OVTreeView(treeView)*@
+
+
+
+@*<div id="ChargeCodeTree"></div>
+<script>
+
+    jQuery(function () {
+        jQuery("#ChargeCodeTree").kendoTreeView({
+            "dragstart": function (e) {
+                return MSCJS.InvokeClient('TreeView', 'OnDragStart', [e], undefined);
+            },
+            "drop": function (e) { return MSCJS.InvokeClient('TreeView', 'OnDrop', [e], undefined); },
+            "change": function (e) { return MSCJS.InvokeClient('TreeView', 'OnChange', [e], undefined); },
+            "drag": function (e) { return MSCJS.InvokeClient('TreeView', 'OnDrag', [e], undefined); },
+            "select": function (e) { return MSCJS.InvokeClient('TreeView', 'OnSelect', [e], undefined); },
+            "expand": function (e) { return MSCJS.InvokeClient('TreeView', 'OnExpand', [e], undefined); },
+            "dataBound": function (e) { return MSCJS.InvokeClient('TreeView', 'OnDataBound', [e], undefined); },
+            "dataSource": {
+                "transport": {
+                    "read": { "url": "/UIHelper/GetJsonTreeView?status=All" },                    
+                }, "error": function (e) {
+                    if (typeof window['OnChargeCodeTreeError'] === 'function') {
+                        OnChargeCodeTreeError.call(e.sender, e);
+                    }
+                }, "schema": {
+                    "errors": "Error", "model": {
+                        "id": "Id",
+                        "hasChildren": "HasChildren",
+                        "children": "ChildNode"
+                    }
+                }
+            },
+            "dragAndDrop": true,
+            "loadOnDemand": false,
+            "checkboxes": {
+                "name": "checkedNodes",
+                "checkChildren": true
+            }, "autoScroll": false,
+            "dataSpriteCssClassField": "Icon",
+            "dataTextField": ["Name"]
+        });
+    });
+</script>*@

@@ -4,16 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grid</title>    
-    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.225/styles/kendo.common-material.min.css" />
-    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.225/styles/kendo.material.min.css" />
-    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.225/styles/kendo.dataviz.min.css" />
-    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.225/styles/kendo.dataviz.material.min.css" />
-
-    <script src="http://cdn.kendostatic.com/2015.1.225/js/jquery.min.js"></script>
-    <script src="http://cdn.kendostatic.com/2015.1.225/js/kendo.all.min.js"></script>
-    <script src="http://cdn.kendostatic.com/2015.1.225/js/kendo.aspnetmvc.min.js"></script>
-    <script src="~/Scripts/mschelper.lib.js"></script>
-
+     @Styles.Render("~/Content/css/default/bootstrap", "~/Content/kendo/styles", "~/Content/css/custom/styles")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo.aspnetmvc.min.js"></script>
+    <script src="~/Scripts/mschelper.lib.js?v=913q342"></script>
 </head>
 <body>
     <div class="container body-content">

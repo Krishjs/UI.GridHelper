@@ -1,0 +1,3 @@
+﻿@model CityDataSource.City
+@using Kendo.Mvc.UI
+@Html.OVComboBoxFor(m => m.StateInfo, new ComboBoxSettings() { Custom = true, ValueField = "Code", TextField = "Name", ControllerName = "UIHelper", MethodName = "GetStatesWithPagination" })

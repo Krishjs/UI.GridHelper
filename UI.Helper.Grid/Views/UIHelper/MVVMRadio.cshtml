@@ -1,0 +1,48 @@
+﻿<div id="mvvm">
+        <ul data-bind="source: citys" data-template="radio-template" class="terpopoverlist boxFix"> </ul>
+    </div>
+    <input type="button" value="Load" onclick="startmvvm()" />
+    <script id="radio-template" type="text/mvc-template">
+        <li>
+            <input type="radio" name="city" data-bind="value : Id , checked: selectedId" />
+            <label data-bind="text: Name"></label>
+        </li>
+    </script>
+
+
+    <script type="text/javascript">
+        var Citys = {};
+        function startmvvm() {
+            $.post('@Url.Action("GetFiveCitys", "UIHelper")', {}, function (data) {
+                Citys = kendo.observable({ citys: data, selectedId: "0" });
+                kendo.bind($('#mvvm'), Citys);
+            });
+        }
+    </script>
+
+@*<div id="test">
+    Selected Value: <span data-bind="text:selectedValue"></span>
+    <div data-bind="source:items" data-template="radio-template"></div>
+</div>
+
+<script id="radio-template" type="text/x-kendo-template">
+    <div>
+        <input type="radio" data-bind="value:value, checked:selectedValue" />
+        <label data-bind="text:caption"></label>
+    </div>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var viewModel = kendo.observable({
+            selectedValue: "1",
+            id: "radiogroup",
+            items: [
+                { caption: "item_0", value: "0" },
+                { caption: "item_1", value: "1" },
+                { caption: "item_2", value: "2" }
+            ]
+        });
+        kendo.bind($("#test"), viewModel);
+    })
+</script>*@

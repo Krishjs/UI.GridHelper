@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
 
 namespace UI.Helper.Grid
@@ -13,7 +14,8 @@ namespace UI.Helper.Grid
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            Redis.RedisHelper.RedisConnectionAndUpload(connectionString: "172.17.194.68:6379");
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //Redis.RedisHelper.RedisConnectionAndUpload(connectionString: "172.17.194.58:6379");
         }
     }
 }

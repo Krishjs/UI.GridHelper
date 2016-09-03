@@ -1,0 +1,154 @@
+﻿@model List<City>
+@using CityDataSource;
+@using Kendo.Mvc.UI;
+@*@{
+    var stateInfoAttributes = new Dictionary<string, object>();
+    stateInfoAttributes.Add("data_text_field", "StateInfo.Name");
+    stateInfoAttributes.Add("data_value_field", "StateInfo.Id");
+    stateInfoAttributes.Add("data_bind", "StateInfo");
+    var validFromAttributes = new Dictionary<string, object>();
+    validFromAttributes.Add("data_bind", "ValidFrom");
+    var validToAttributes = new Dictionary<string, object>();
+    validToAttributes.Add("data_bind", "ValidTo");
+    var countryAttributes = new Dictionary<string, object>();
+    countryAttributes.Add("data_text_field", "StateInfo.CountryInfo.Name");
+    countryAttributes.Add("data_value_field", "StateInfo.CountryInfo.Id");
+    countryAttributes.Add("data_bind", "StateInfo.CountryInfo");
+
+
+    Html.Kendo().Grid<City>().Name("grid").Columns(columns =>
+    {
+    columns.Bound(c => c.Name);
+    columns.Bound(c => c.StateInfo.Name).Template(
+        @<text> @Html.OVComboBox(new State(), new ComboBoxSettings { ControllerName = "GetStates", MethodName = "UIHelper", ValueField = "Id", TextField = "Name", Name = "StateInfo_" + item.Id, Custom = true, MinLength = 2, HtmlAttributes = stateInfoAttributes }) </text>);
+    columns.Bound(c => c.StateInfo.CountryInfo.Name).Template(@<text> @Html.OVComboBox(new State(), new ComboBoxSettings { ControllerName = "GetCountries", MethodName = "UIHelper", ValueField = "Id", TextField = "Name", Name = "StateInfo_" + item.Id, Custom = true, MinLength = 2, HtmlAttributes = stateInfoAttributes }) </text>);
+    columns.Bound(c => c.StateInfo.CountryInfo.Code).ClientTemplate("<span data-bind='StateInfo.CountryInfo.Code'></span>");
+    columns.Bound(c => c.ValidTo).Template(@<text> @Html.OVDatePicker("ValidFrom_" + item.Id, isEnabled: true, htmlAttribute: validFromAttributes) </text>);
+    columns.Bound(c => c.ValidTo).Template(@<text> @Html.OVDatePicker("ValidTo_" + item.Id, isEnabled: true, htmlAttribute: validToAttributes) </text>);
+    })
+    .HtmlAttributes(new { style = "height: 550px;" })
+    .Scrollable()
+    .Groupable()
+    .Sortable()
+    .Pageable(pageable => pageable
+    .Refresh(true)
+    .PageSizes(true)
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+    .Ajax()
+    .Read(read => read.Action("GetCitys", "UIHelper"))
+    .PageSize(20)).Render();
+}*@
+
+
+
+@{    
+    var validFromAttributes = new Dictionary<string, object>();
+    validFromAttributes.Add("data_text_field", "StateInfo.CountryInfo.Name");
+    validFromAttributes.Add("data_value_field", "StateInfo.CountryInfo.Id");
+    validFromAttributes.Add("data_bind", "StateInfo.CountryInfo");
+    var grid = new DetailGrid<City>();
+    grid.FilterSettings.IsFilterable = false;
+    grid.Name = "cargocontainersgrid";
+    grid.SelectionSettings.CanSelect = true;
+    grid.PageSettings.PageSize = 10;
+    grid.PageSettings.IsPageable = true;
+    grid.CallbackValues.ActionName = "GetCitys";
+    grid.CallbackValues.ControllerName = "UIHelper";
+    grid.CandoServerOperation = true;
+    grid.IdProperty = "Id";
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "Name",
+        Title = "Name",
+        Width = 200,
+        IsVisible = true,
+        FilterSettings = new FilterSettings() { CanShowOperators = true, DefaultOperator = "contains", IsFilterByRow = true },
+
+    });
+    grid.GridColumns.Add(new GridColumn<City>()
+    {
+        ColumnName = "StateInfo.Name",
+        Title = "State",
+        Width = 180,
+        IsVisible = true,
+        ClientTemplate = "<input type='text' id='#: item." + grid.IdProperty + " #_StateInfo' class='editor-stateinfo'/>"
+    }.SetTemplate(c =>
+    {
+    var stateInfoAttributes = new Dictionary<string, object>();
+    stateInfoAttributes.Add("data_text_field", "StateInfo.Name");
+    stateInfoAttributes.Add("data_value_field", "StateInfo.Id");
+    stateInfoAttributes.Add("data_bind", "StateInfo");
+                @<text>
+                @Html.OVComboBox(new State(), new ComboBoxSettings
+                {
+                ControllerName = "GetStates",
+                MethodName = "UIHelper",
+                ValueField = "Id",
+                TextField = "Name",
+                Name = "StateInfo_" + c.Id,
+                Custom = true,
+                MinLength = 2,
+                HtmlAttributes = stateInfoAttributes
+                })
+                </text>
+        }));
+        grid.GridColumns.Add(new GridColumn<City>()
+        {
+            ColumnName = "StateInfo.CountryInfo.Name",
+            Title = "Country",
+            Width = 180,
+            IsVisible = true,
+        }
+        .SetTemplate(c =>
+        {
+            var countryAttributes = new Dictionary<string, object>();
+            countryAttributes.Add("data_text_field", "StateInfo.CountryInfo.Name");
+            countryAttributes.Add("data_value_field", "StateInfo.CountryInfo.Id");
+            countryAttributes.Add("data_bind", "StateInfo.CountryInfo");
+            @<text>
+             @Html.OVComboBox(new State(), new ComboBoxSettings
+            {
+                ControllerName = "GetCountries",
+                MethodName = "UIHelper",
+                ValueField = "Id",
+                TextField = "Name",
+                Name = "CountryInfo_" + c.Id,
+                Custom = true,
+                MinLength = 2,
+                HtmlAttributes = countryAttributes
+            })
+            </text>
+        }));
+        grid.GridColumns.Add(new GridColumn<City>()
+        {
+            ColumnName = "StateInfo.CountryInfo.Code",
+            Title = "Country Code",
+            Width = 100,
+            IsVisible = true,
+        });
+        grid.GridColumns.Add(new GridColumn<City>()
+        {
+            ColumnName = "Latitude",
+            Title = "Latitude",
+            Width = 70,
+            IsVisible = true,
+            FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+        });
+        grid.GridColumns.Add(new GridColumn<City>()
+        {
+            ColumnName = "ValidFrom",
+            Title = "Valid From",
+            Width = 110,
+            IsVisible = true,
+            DisplayFormat = "dd-MMM-yyyy",
+            FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+        }.SetTemplate(
+            @<text>
+               @Html.OVDatePicker("ValidFrom_" + item.Id, isEnabled: true, htmlAttribute: validFromAttributes)
+            </text>
+        ));
+
+
+    }
+    @(Html.OVGrid(grid, Model.AsEnumerable()))

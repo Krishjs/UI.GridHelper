@@ -1,191 +1,260 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BaseController.cs" company="MSC - iBox">
-//     Mediterranean Shipping Company SA - iBox
-//     OneVision Project
+//     Mediterranean Shipping Company SA - iBox.
+//     OneVision Project.
 // </copyright>
+// <summary>
+// Provides all the basic methods need for an Controller.
+// </summary>
 //-----------------------------------------------------------------------
 namespace Msc.Template.UI
 {
     using System;
     using System.Collections;
-    using System.Linq;
-    using System.Reflection;
     using System.Web.Mvc;
     using System.Web.Script.Serialization;
+    using Framework.UI.Helper;
     using Kendo.Mvc.Extensions;
     using Kendo.Mvc.UI;
-    using Msc.Framework.UI.Helper;    
 
     /// <summary>
-    /// Provides all the basic methods need for an Controller
+    /// Provides all the basic methods need for an Controller.
     /// </summary>
     public abstract partial class BaseController : Controller
     {
         /// <summary>
-        /// Gets Process ID
+        /// Gets the Process Code.
         /// </summary>
-        public abstract long FunctionId { get; }
-
-        
-        #region Grid
+        /// <value>The function code property gets the string value.</value>
+        public abstract string FunctionCode { get; }
 
         /// <summary>
-        /// Method that receives a HTTP callback for a Grid
+        /// Menu action is used to return or render menu/Menu partial view.
         /// </summary>
-        /// <param name="request"> Request model of Kendo </param>
-        /// <param name="invokeMethod"> Method to be invoked in the Controller </param>
-        /// <returns> Returns a JSON result of the List of value </returns>
-        public ActionResult GridCallback([DataSourceRequest]DataSourceRequest request, string invokeMethod)
+        /// <returns>Return MenuPartial view with FunctionUnitView collection from session.</returns>
+        public virtual ActionResult Menu()
         {
-            MethodInfo me = this.GetType().GetMethod(invokeMethod);
-            var e = me.Invoke(this, parameters: null) as IEnumerable;
+            this.ViewBag.FunctionCode = this.FunctionCode;
 
-            return this.Json(e.ToDataSourceResult(request));
+            return this.PartialView(viewName: "MenuPartial", model: this.HttpContext.Session["Menu"]);
         }
 
         /// <summary>
-        /// Method that receives a HTTP callback request for Custom Grid
+        /// Redirect to login page and Abandon the session.
         /// </summary>
-        /// <param name="request"> Request model of Kendo </param>
-        /// <param name="invokeMethod"> Method to be invoked in the Controller </param>
-        /// <returns> Returns a JavaScript Object Notation result with only records based </returns>
-        public ActionResult CustomGridCallback([DataSourceRequest]DataSourceRequest request, string invokeMethod)
+        /// <returns>Return to login page.</returns>
+        public virtual ActionResult LogOff()
         {
-            if (request == null)
+            this.Session.Abandon();
+            if (Response.Cookies["OVSignedIn"]?.HasKeys == true)
             {
-                throw new ArgumentNullException(paramName: "request");
+                Response.Cookies.Remove(name: "OVSignedIn");
             }
 
-            MethodInfo me = this.GetType().GetMethod(invokeMethod);
-            var cgds = me.Invoke(this, parameters: null) as CustomDataSource;
-            return this.Json(new DataSourceResult() { Data = cgds.Data, Total = cgds.Count });
+            return this.RedirectToAction(actionName: "Index", controllerName: "Home");
         }
 
-        #endregion Grid
-
-        #region Combobox
+        /// <summary>
+        /// This method returns the collection to the view with JavaScript Object Notation Request Behavior allow get.
+        /// </summary>
+        /// <param name="collection">Collection of data to send to client.</param>
+        /// <returns>JavaScript Object Notation result with collection.</returns>
+        public ActionResult Data(IEnumerable collection)
+        {
+            return this.Json(collection, JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
-        /// Get Combo Box Data
+        /// This method returns the collection to the view with JavaScript Object Notation Request Behavior allow get.
         /// </summary>
-        /// <param name="controllerName"> Controller Name </param>
-        /// <param name="methodName"> Method Name </param>
-        /// <param name="assemblyName"> Assembly Name </param>
-        /// <returns> Content Result</returns>
-        public ActionResult GetComboBox(string controllerName, string methodName, string assemblyName)
+        /// <param name="collection">Collection of data to send to client.</param>
+        /// <param name="request">Callback request content to the client.</param>
+        /// <returns>JavaScript Object Notation result with collection.</returns>
+        public ActionResult Data(IEnumerable collection, DataSourceRequest request)
         {
-            string parameters = string.Empty;
-            object result = this.Invoke(controllerName, methodName, assemblyName, parameters);
+            return this.Json(collection.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// This method returns custom data source for callback.
+        /// </summary>
+        /// <param name="data">Data collection to return with the specific page.</param>
+        /// <param name="count">Data total count.</param>
+        /// <returns>JavaScript Object Notation result with collection and the count.</returns>
+        public ActionResult CustomData(IEnumerable data, int count)
+        {
+            return GetResult(data, count);
+        }
+
+        /// <summary>
+        /// This method returns custom data source for callback.
+        /// </summary>
+        /// <param name="dataSource">Data collection to return with the specific page with total count.</param>
+        /// <returns>JavaScript Object Notation result with collection and the count.</returns>
+        public ActionResult CustomData(CustomDataSource dataSource)
+        {
+            if (dataSource == null)
+            {
+                throw new ArgumentNullException(paramName: "dataSource");
+            }
+
+            return GetResult(dataSource.Data, dataSource.Total);
+        }
+
+        /// <summary>
+        /// Show Message .
+        /// </summary>
+        /// <param name="title"> Message Box Title .</param>
+        /// <param name="messageType"> Message Type. </param>
+        /// <param name="message"> Message Content. </param>
+        /// <returns> JavaScript Object Notation Result. </returns>
+        public ActionResult ShowMessage(string title, MessageType messageType, string message)
+        {
+            return this.Json(new { success = true, title = title, type = GetMessageType(messageType), message = message }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Show Message.
+        /// </summary>
+        /// <param name="title"> Message Box Title. </param>
+        /// <param name="messageType"> Message Type. </param>
+        /// <param name="message"> Message Content. </param>
+        /// <param name="parameters"> With Parameter. </param>
+        /// <returns> JavaScript Object Notation Result. </returns>
+        public JsonResult ShowMessage(string title, MessageType messageType, string message, object parameters)
+        {
+            return this.Json(new { success = true, title = title, type = GetMessageType(messageType), message = message, parameters = parameters }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Show Message.
+        /// </summary>
+        /// <param name="title"> Message Box Title. </param>
+        /// <param name="messageType">Message Type.</param>
+        /// <param name="ex">Exception parameter.</param>
+        /// <returns>Return the JavaScript Object Notation result.</returns>
+        public ActionResult ShowMessage(string title, MessageType messageType, Exception ex)
+        {
+            string innerMessage = string.Empty;
+
+            if (ex == null)
+            {
+                throw new ArgumentNullException(paramName: "ex");
+            }
+
+            innerMessage = ex.InnerException?.ToString() ?? string.Empty;
+
+            if (messageType == MessageType.Error)
+            {
+                if (Request.IsAjaxRequest())
+                {
+                    Response.TrySkipIisCustomErrors = true;
+                    Response.StatusCode = 500;
+                }
+            }
+
+            string stackTrace = string.Empty;
+            if (ex.InnerException != null)
+            {
+                if (ex.InnerException.StackTrace != null)
+                {
+                    stackTrace = ex.InnerException.StackTrace.ToString();
+                }
+            }
+            else if (ex.StackTrace != null)
+            {
+                stackTrace = ex.StackTrace.ToString();
+            }
+
+            return this.Json(new { success = false, title = title, type = GetMessageType(messageType), message = ex.Message, innerMessage = innerMessage, stackTrace = stackTrace }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Show Message.
+        /// </summary>
+        /// <param name="title"> Message Box Title. </param>
+        /// <param name="ex"> Exception to Display. </param>
+        /// <returns> JavaScript Object Notation Result With Content. </returns>
+        public ActionResult ShowMessage(string title, Exception ex)
+        {
+            return this.ShowMessage(title, ex, handleException: true);
+        }
+
+        /// <summary>
+        /// Show Message.
+        /// </summary>
+        /// <param name="title"> Message Box Title. </param>
+        /// <param name="ex"> Exception to Display. </param>
+        /// <param name="handleException"> Handle Exception. </param>
+        /// <returns> JavaScript Object Notation Result With Content. </returns>
+        public ActionResult ShowMessage(string title, Exception ex, bool handleException)
+        {
+            if (handleException)
+            {
+                //Exception outException;
+                //ExceptionAnalyzer.GetInstance.HandleException(ex, out outException);
+                //if (outException != null)
+                //{
+                //    ex = outException;
+                //}
+            }
+
+            return this.ShowMessage(title, MessageType.Error, ex.Message);
+        }
+
+        /// <summary>
+        /// Dispose the Session.
+        /// </summary>
+        /// <param name="disposing">Can Dispose Session.</param>
+        protected override void Dispose(bool disposing)
+        {
+            //this.session.Dispose();
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Convert Message Type to Character.
+        /// </summary>
+        /// <param name="messageType"> Message Type. </param>
+        /// <returns> Character represent Message Type. </returns>
+        private static char GetMessageType(MessageType messageType)
+        {
+            char type = char.MinValue;
+            switch (messageType)
+            {
+                case MessageType.Information:
+                    type = 'I';
+                    break;
+
+                case MessageType.Error:
+                    type = 'E';
+                    break;
+
+                case MessageType.Warning:
+                    type = 'W';
+                    break;
+
+                default:
+                    type = 'N';
+                    break;
+            }
+            return type;
+        }
+
+        /// <summary>
+        /// This method returns custom data source for callback.
+        /// </summary>
+        /// <param name="data">Data collection to return with the specific page.</param>
+        /// <param name="count">Data total count.</param>
+        /// <returns>Content result with collection and the count custom serializer.</returns>
+        private static ContentResult GetResult(IEnumerable data, int count)
+        {
             var serializer = new JavaScriptSerializer();
-            var contentResult = new ContentResult();
+            var result = new ContentResult();
             serializer.MaxJsonLength = int.MaxValue;
-            contentResult.Content = serializer.Serialize(result);
-            contentResult.ContentType = "application/json";
-            return contentResult;
-        }
-
-        /// <summary>
-        /// Get the Custom List from Start to End Index
-        /// </summary>
-        /// <param name="request"> Data Source Request </param>
-        /// <param name="controllerName"> Controller Name </param>
-        /// <param name="methodName"> Method Name which returns List of Values </param>
-        /// <param name="assemblyName"> Assembly Name </param>
-        /// <returns> Data Source Result with data as well as Total </returns>
-        public ActionResult GetCustomList([DataSourceRequest] DataSourceRequest request, string controllerName, string methodName, string assemblyName)
-        {
-            Func<string> getParameters = () =>
-            {
-                string filter = string.Empty;
-                if (request.Filters.Count > 0)
-                {
-                    filter = ((Kendo.Mvc.FilterDescriptor)request.Filters[0]).Value.ToString();
-                }
-
-                string parameters = string.Empty;
-                int startIndex = request.PageSize * (request.Page - 1);
-                if (string.IsNullOrEmpty(parameters))
-                {
-                    parameters = startIndex + "|" + request.PageSize + "|" + filter;
-                }
-
-                return parameters;
-            };
-            CustomDataSource cds = this.Invoke(controllerName, methodName, assemblyName, getParameters()) as CustomDataSource ?? new CustomDataSource();
-
-            return this.Json(new DataSourceResult() { Data = cds.Data, Total = cds.Count });
-        }
-
-        /// <summary>
-        /// Get the Parameter Values
-        /// </summary>
-        /// <param name="value"> String Values </param>
-        /// <returns> Parameter String </returns>
-        public string GetParameterValue(string value)
-        {
-            if (this.Request != null)
-            {
-                return Request.Params[value];
-            }
-
-            return System.Web.HttpContext.Current.Request.Params[value];
-        }
-
-        /// <summary>
-        /// Get Arguments when multiple parameters passed
-        /// </summary>
-        /// <param name="parameters"> Parameter values </param>
-        /// <returns> Multiple Columns Header </returns>
-        private static object[] GetArguments(string parameters)
-        {
-            object[] args = null;
-            if (!string.IsNullOrEmpty(parameters))
-            {
-                string[] paramsArray = parameters.Split(separator: new char[] { '|' });
-                args = new object[paramsArray.Length];
-                for (int i = 0; i < paramsArray.Length; i++)
-                {
-                    args[i] = paramsArray[i];
-                }
-            }
-
-            return args;
-        }
-
-        /// <summary>
-        /// Method to be invoked for returning list from ControllerName
-        /// </summary>
-        /// <param name="controllerName"> Controller Name </param>
-        /// <param name="methodName"> Method Name </param>
-        /// <param name="assemblyName"> Assembly Name </param>
-        /// <param name="parameters"> Parameter Values </param>
-        /// <returns> List of Value from Database </returns>
-        private object Invoke(string controllerName, string methodName, string assemblyName, string parameters)
-        {
-            MethodInfo methodInfo = null;
-            MethodInfo[] methods = null;
-
-            if (string.IsNullOrEmpty(assemblyName))
-            {
-                methods = this.GetType().GetMethods().Where(m => m.Name == methodName).ToArray();
-            }
-            else
-            {
-                Assembly assembly = Assembly.Load(assemblyName);
-                Type type = assembly.GetType(assemblyName + "." + "Controllers" + "." + controllerName + "Controller");
-                methods = type.GetType().GetMethods().Where(m => m.Name == methodName).ToArray();
-            }
-
-            var result = new object();
-            foreach (MethodInfo method in methods)
-            {
-                methodInfo = method;
-                result = methodInfo.Invoke(this, GetArguments(parameters));
-            }
-
+            result.Content = serializer.Serialize(new DataSourceResult() { Data = data, Total = count });
+            result.ContentType = "application/json";
             return result;
         }
-
-        #endregion Combobox
     }
 }

@@ -1,0 +1,71 @@
+﻿@using Kendo.Mvc.UI
+<link href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" rel="stylesheet">
+<link href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.rtl.min.css" rel="stylesheet">
+<link href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.min.css" rel="stylesheet">
+<link href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.mobile.min.css" rel="stylesheet">
+<style type="text/css">
+    .k-slot-cell {
+        vertical-align:middle;
+    }
+</style>
+@(Html.Kendo().Scheduler<Scheduler.MeetingViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2016, 5, 9))
+    .Views(views =>
+    {
+        views.TimelineWeekView(timeline =>
+        {
+            timeline.MajorTick(1440);
+            timeline.Footer(false);
+            timeline.ColumnWidth(5);
+            timeline.MajorTimeHeaderTemplate("#:'' #");
+            timeline.EventHeight(20);
+        });
+        views.TimelineMonthView(timeline =>
+        {
+            timeline.Selected(true);
+            timeline.ColumnWidth(50);
+            timeline.Footer(false);
+            timeline.MajorTick(1440);
+            timeline.MinorTickCount(1);
+            timeline.MajorTimeHeaderTemplate("#:'' #");
+            timeline.EventHeight(20);            
+        });
+    })    
+    .ShowWorkHours(true)
+    .Timezone("Etc/UTC")
+    .Group(group => group.Resources("Rooms", "Attendees").Orientation(SchedulerGroupOrientation.Vertical))
+    .Resources(resource =>
+    {
+        resource.Add(m => m.RoomID)
+            .Title("Room")
+            .Name("Rooms")
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Depot 01", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Depot 201", Value = 2, Color = "#f58a8a" }
+            });
+        resource.Add(m => m.Attendees)
+            .Title("Attendees")
+            .Name("Attendees")
+            .Multiple(true)
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "2ODV", Value = 1, Color = "#f8a398" } ,
+                    new { Text = "40DV", Value = 2, Color = "#51a0ed" } ,
+                    new { Text = "40OT", Value = 3, Color = "#56ca85" }
+            });
+    })
+    .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            }))
+)

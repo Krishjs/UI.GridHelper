@@ -1,0 +1,18 @@
+﻿@{
+    var action = (string)ViewData["Action"];
+    var controller = (string)ViewData["Controller"];
+    var attr = new Dictionary<string, object>();
+    attr.Add("asp_property", ViewData.TemplateInfo.HtmlFieldPrefix);
+    @Html.OVComboBoxFor(model => model,
+                new ComboBoxSettings
+                {
+                    ControllerName = controller,
+                    MethodName = action,
+                    ValueField = "Id",
+                    TextField = "Name",
+                     Columns= new ComboBoxColumns(),
+                    Custom = true,
+                    MinLength = 2,
+                    HtmlAttributes = attr
+    });
+}

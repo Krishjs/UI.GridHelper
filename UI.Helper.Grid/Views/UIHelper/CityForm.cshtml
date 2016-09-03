@@ -1,0 +1,34 @@
+﻿
+@model CityDataSource.City
+
+
+
+
+@using (Html.BeginForm("CitySave", "UIHelper", FormMethod.Post))
+{
+    @Html.OVTextBoxFor(model => model.Code,"TEN")
+
+    @Html.OVTextBoxFor(model => model.Name,"Tirunelveli")
+    
+    @Html.OVTextBoxFor(model => model.StateInfo.Code,"TN")
+
+    @Html.OVTextBoxFor(model => model.StateInfo.Name,"Tamil Nadu")
+
+    @Html.OVTextBoxFor(model => model.StateInfo.CountryInfo.Code,"IN")
+
+    @Html.OVTextBoxFor(model => model.StateInfo.CountryInfo.Name,"India")
+
+    @Html.OVTextBoxFor(model => model.ZipCodeList[0].CityZip)
+
+    @Html.OVTextBoxFor(model => model.ZipCodeList[1].CityZip)
+
+    @Html.OVTextBoxFor(model => model.ZipCodeList[2].CityZip)
+
+    <input  value="Submit" type="button" onclick="OnClick(this)" />
+}
+<script type="text/javascript">
+    function OnClick()
+    {
+        $.post('@Url.Action("CitySave", "UIHelper")', $('form').serialize(), function (data) { });
+    }
+</script>

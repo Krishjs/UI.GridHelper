@@ -8,6 +8,7 @@ namespace CityDataSource
 {
     using System;
     using System.Collections.Generic;
+    using System.Web.ModelBinding;
 
     [Serializable]
     public class City
@@ -30,11 +31,12 @@ namespace CityDataSource
 
         private DateTime validTo;
 
-        private IList<CityZipCode> zipCodeList;
+        private IList<CityZipCode> zipCodes;
 
         private double? latitude;
 
         private double? longitude;
+
 
         public City()
             : base()
@@ -67,6 +69,8 @@ namespace CityDataSource
 
             set { this.name = value; }
         }
+
+        public bool IsCapital { get; set; }
 
         public string ForeignLanguageName
         {
@@ -121,16 +125,16 @@ namespace CityDataSource
             set { this.validTo = value; }
         }
 
-        public IList<CityZipCode> ZipCodeList
+        public IList<CityZipCode> ZipCodes
         {
             get
             {
-                if (this.zipCodeList == null)
+                if (this.zipCodes == null)
                 {
-                    this.zipCodeList = new List<CityZipCode>();
+                    this.zipCodes = new List<CityZipCode>();
                 }
 
-                return this.zipCodeList;
+                return this.zipCodes;
             }
         }
 
@@ -146,6 +150,20 @@ namespace CityDataSource
             get { return this.longitude; }
 
             set { this.longitude = value; }
+        }
+
+        public bool IsSelected { get; set; }
+
+        public bool HasFlag { get; set; } = true;
+
+        public string Status { get; set; } = "UC";
+    }
+
+    public class CityModelBinder : IModelBinder
+    {
+        public bool BindModel(ModelBindingExecutionContext modelBindingExecutionContext, ModelBindingContext bindingContext)
+        {
+            return true;
         }
     }
 }

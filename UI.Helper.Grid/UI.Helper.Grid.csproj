@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,13 +41,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>..\..\..\..\..\..\Development\ONV-Framework\Msc.Framework.UI.Helper\Msc.Framework.UI.Helper\bin\Debug\Kendo.Mvc.dll</HintPath>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Kendo.Mvc, Version=2015.2.805.545, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Development\ONV-FrameworkV2\Framework\UI\Helper\Main\Msc.Framework.UI.Helper\Msc.Framework.UI.Helper\bin\Debug\Kendo.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Msc.Framework.UI.Helper, Version=1.0.5799.41616, Culture=neutral, PublicKeyToken=0db204bca7b06870, processorArchitecture=MSIL">
+    <Reference Include="Msc.Framework.UI.Helper, Version=0.2.6029.27322, Culture=neutral, PublicKeyToken=0db204bca7b06870, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Development\ONV-Framework\Msc.Framework.UI.Helper\Msc.Framework.UI.Helper\bin\Debug\Msc.Framework.UI.Helper.dll</HintPath>
+      <HintPath>..\..\..\..\Development\ONV-FrameworkV2\Framework\UI\Helper\Main\Msc.Framework.UI.Helper\Msc.Framework.UI.Helper\bin\Debug\Msc.Framework.UI.Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.0.316.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.0.481\lib\net45\StackExchange.Redis.dll</HintPath>
@@ -66,6 +76,10 @@
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -91,6 +105,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.Infrastructure">
@@ -98,30 +116,221 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\CSS\custom\iconset.css" />
+    <Content Include="Content\CSS\custom\k-icons.css" />
+    <Content Include="Content\CSS\custom\Navigation.css" />
+    <Content Include="Content\CSS\custom\styles.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\fonts\Roboto\Roboto-Bold-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\Roboto-Light-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\Roboto-Medium-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\Roboto-Regular-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\Roboto-Thin-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Bold-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Light-webfont.svg" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Regular-webfont.svg" />
+    <Content Include="Content\routechart\fonts.css" />
+    <Content Include="Content\routechart\main.css" />
+    <Content Include="Content\routechart\preloader.svg" />
+    <Content Include="Content\routing\fonts.css" />
+    <Content Include="Content\routing\main.css" />
+    <Content Include="Content\routing\preloader.svg" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\vendors\bootstrap\bootstrap.css" />
+    <Content Include="Content\vendors\bootstrap\bootstrap.min.css" />
+    <Content Include="Content\vendors\bootstrap\Site.css" />
+    <Content Include="Content\vendors\joint\joint.css" />
+    <Content Include="Content\vendors\kendo\Default\editor.png" />
+    <Content Include="Content\vendors\kendo\Default\imagebrowser.png" />
+    <Content Include="Content\vendors\kendo\Default\indeterminate.gif" />
+    <Content Include="Content\vendors\kendo\Default\loading-image.gif" />
+    <Content Include="Content\vendors\kendo\Default\loading.gif" />
+    <Content Include="Content\vendors\kendo\Default\loading_2x.gif" />
+    <Content Include="Content\vendors\kendo\Default\markers.png" />
+    <Content Include="Content\vendors\kendo\Default\markers_2x.png" />
+    <Content Include="Content\vendors\kendo\Default\slider-h.gif" />
+    <Content Include="Content\vendors\kendo\Default\slider-v.gif" />
+    <Content Include="Content\vendors\kendo\Default\sprite.png" />
+    <Content Include="Content\vendors\kendo\Default\sprite_2x.png" />
+    <Content Include="Content\vendors\kendo\Default\sprite_kpi.png" />
+    <Content Include="Content\vendors\kendo\Default\sprite_kpi_2x.png" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\LICENSE.txt" />
+    <Content Include="Content\vendors\kendo\fonts\glyphs\KendoUIGlyphs.svg" />
+    <Content Include="Content\vendors\kendo\images\back.png" />
+    <Content Include="Content\vendors\kendo\images\kendoui.svg" />
+    <Content Include="Content\vendors\kendo\images\wp8_icons.png" />
+    <Content Include="Content\vendors\kendo\images\wp8_inverseicons.png" />
+    <Content Include="Content\vendors\kendo\kendo.bootstrap.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.bootstrap.mobile.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.common-bootstrap.core.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.common-bootstrap.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.common.core.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.common.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.bootstrap.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.default.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.default.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.default.mobile.min.css" />
+    <Content Include="Content\vendors\kendo\kendo.rtl.min.css" />
+    <Content Include="Content\vendors\kendo\textures\brushed-metal.png" />
+    <Content Include="Content\vendors\kendo\textures\dots1.png" />
+    <Content Include="Content\vendors\kendo\textures\dots10.png" />
+    <Content Include="Content\vendors\kendo\textures\dots11.png" />
+    <Content Include="Content\vendors\kendo\textures\dots12.png" />
+    <Content Include="Content\vendors\kendo\textures\dots13.png" />
+    <Content Include="Content\vendors\kendo\textures\dots2.png" />
+    <Content Include="Content\vendors\kendo\textures\dots3.png" />
+    <Content Include="Content\vendors\kendo\textures\dots4.png" />
+    <Content Include="Content\vendors\kendo\textures\dots5.png" />
+    <Content Include="Content\vendors\kendo\textures\dots6.png" />
+    <Content Include="Content\vendors\kendo\textures\dots7.png" />
+    <Content Include="Content\vendors\kendo\textures\dots8.png" />
+    <Content Include="Content\vendors\kendo\textures\dots9.png" />
+    <Content Include="Content\vendors\kendo\textures\glass-lighter.png" />
+    <Content Include="Content\vendors\kendo\textures\glass.png" />
+    <Content Include="Content\vendors\kendo\textures\highlight.png" />
+    <Content Include="Content\vendors\kendo\textures\hsv-gradient.png" />
+    <Content Include="Content\vendors\kendo\textures\hue.png" />
+    <Content Include="Content\vendors\kendo\textures\leather1.png" />
+    <Content Include="Content\vendors\kendo\textures\leather2.png" />
+    <Content Include="Content\vendors\kendo\textures\noise.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe1.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe2.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe3.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe4.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe5.png" />
+    <Content Include="Content\vendors\kendo\textures\stripe6.png" />
+    <Content Include="Content\vendors\kendo\textures\transparency.png" />
+    <Content Include="Content\vendors\kendo\textures\transtexture.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="images\logo.png" />
+    <Content Include="images\trans.png" />
+    <Content Include="images\usericon.png" />
     <Content Include="Models\City\CityList.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="AutoComplete.config" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\fonts\icomoon\icomoon.eot" />
+    <Content Include="Content\fonts\icomoon\icomoon.ttf" />
+    <Content Include="Content\fonts\icomoon\icomoon.woff" />
+    <Content Include="Content\fonts\Roboto\Roboto-Bold-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\Roboto-Bold-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\Roboto-Bold-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\Roboto-Light-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\Roboto-Light-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\Roboto-Light-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\Roboto-Medium-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\Roboto-Medium-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\Roboto-Medium-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\Roboto-Regular-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\Roboto-Regular-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\Roboto-Regular-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\Roboto-Thin-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\Roboto-Thin-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\Roboto-Thin-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Bold-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Bold-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Bold-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Light-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Light-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Light-webfont.woff" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Regular-webfont.eot" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Regular-webfont.ttf" />
+    <Content Include="Content\fonts\Roboto\RobotoCondensed-Regular-webfont.woff" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSans-Bold.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSans-BoldOblique.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSans-ExtraLight.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSans-Oblique.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSans.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSansMono-Bold.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSansMono-BoldOblique.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSansMono-Oblique.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSansMono.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSerif-Bold.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSerif-BoldItalic.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSerif-Italic.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\DejaVu\DejaVuSerif.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\glyphs\KendoUIGlyphs.eot" />
+    <Content Include="Content\vendors\kendo\fonts\glyphs\KendoUIGlyphs.ttf" />
+    <Content Include="Content\vendors\kendo\fonts\glyphs\KendoUIGlyphs.woff" />
+    <Content Include="Content\vendors\kendo\images\kendoui.ttf" />
+    <Content Include="Content\vendors\kendo\images\kendoui.woff" />
+    <Content Include="Content\vendors\kendo\kendo.bootstrap.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.bootstrap.mobile.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.common-bootstrap.core.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.common-bootstrap.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.common.core.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.common.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.bootstrap.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.default.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.dataviz.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.default.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.default.mobile.min.css.map" />
+    <Content Include="Content\vendors\kendo\kendo.rtl.min.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\grid.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\kendo.all.min.js" />
+    <Content Include="Scripts\kendo.aspnetmvc.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\mschelper.lib.js" />
+    <Content Include="Scripts\msclib.pivotgrid.js" />
+    <Content Include="Scripts\msclib.tabdetail.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BaseController.DetailTransaction.cs" />
+    <Compile Include="Controllers\BaseTransactionController.cs" />
+    <Compile Include="Controllers\GridController.cs" />
     <Compile Include="Controllers\UIHelperController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChargeCodeTreeViewModel.cs" />
     <Compile Include="Models\CityDataSource.cs" />
     <Compile Include="Models\City\City.cs" />
     <Compile Include="Models\City\CityWrapper.cs" />
@@ -129,8 +338,12 @@
     <Compile Include="Models\City\Country.cs" />
     <Compile Include="Models\City\RecordStatus.cs" />
     <Compile Include="Models\City\State.cs" />
+    <Compile Include="Models\Meeting.cs" />
+    <Compile Include="Models\MeetingAttendee.cs" />
+    <Compile Include="Models\MeetingViewModel.cs" />
     <Compile Include="Models\RedisHelper.cs" />
     <Compile Include="Models\RedisUtils.cs" />
+    <Compile Include="Models\SessionState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +356,29 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Shared\EditorTemplates\datetimeEditor.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\datetime.cshtml" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\Shared\EditorTemplates\combobox.cshtml" />
+    <Content Include="Views\UIHelper\FormView.cshtml" />
+    <Content Include="Views\UIHelper\MultiSelect.cshtml" />
+    <Content Include="Views\UIHelper\SessionRaceTest.cshtml" />
+    <Content Include="Views\UIHelper\CityForm.cshtml" />
+    <Content Include="Views\UIHelper\BasicGrid.cshtml" />
+    <Content Include="Views\UIHelper\CustomComboBoxWithDefaultValue.cshtml" />
+    <Content Include="Views\UIHelper\SelectAll.cshtml" />
+    <Content Include="Views\UIHelper\Timeline.cshtml" />
+    <Content Include="Views\Grid\GridView.cshtml" />
+    <Content Include="Views\Grid\GridView - Copy.cshtml" />
+    <Content Include="Scripts\kendo.all.min.js.map" />
+    <Content Include="Scripts\kendo.aspnetmvc.min.js.map" />
+    <Content Include="Views\Grid\GridViewWithoutPagination.cshtml" />
+    <Content Include="Views\UIHelper\ComboBoxGroup.cshtml" />
+    <Content Include="Views\UIHelper\ComboBoxWithProperty.cshtml" />
+    <Content Include="Views\UIHelper\MVVMRadio.cshtml" />
+    <Content Include="Views\UIHelper\CustomComboBoxWithValueFieldAsString.cshtml" />
+    <Content Include="Views\Grid\GridViewWithNoRecords.cshtml" />
+    <Content Include="Views\UIHelper\TreeView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -157,6 +393,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

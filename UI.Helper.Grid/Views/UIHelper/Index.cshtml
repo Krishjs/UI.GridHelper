@@ -1,69 +1,90 @@
-﻿@using CityDataSource
-
-@{
-    var grid = new CustomGrid<City>();
-    grid.CallbackValues.ActionName = "GetCitys";
-    grid.CallbackValues.ControllerName = "UIHelper";
-    grid.Name = "PagingCityGrid";
-    grid.PageSettings.PageSize = 10;
-    grid.PageSettings.IsPageable = true;
-    grid.ShowRefresh = true;
-    grid.SelectionSettings.SelectionMode = SelectionMode.Multiple;
-    grid.SelectionSettings.SelectionType = SelectionType.CheckBox;
-    grid.ShowRefresh = true;
-    grid.SelectionSettings.CanSelect = true;
-    grid.SelectionSettings.IsSelectAll = true;
-    grid.ToolBarSettings.ShowFilter = true;
-    grid.IdProperty = "Id";
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "Name",
-        Title = "Name",
-        Width = 220,
-        IsVisible = true,
-        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "contains", IsFilterByRow = true },
-
-    });
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "StateInfo.Name",
-        Title = "State",
-        Width = 190,
-        IsVisible = true
-    });
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "StateInfo.CountryInfo.Name",
-        Title = "Country",
-        Width = 190,
-        IsVisible = true,
-
-    });
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "StateInfo.CountryInfo.Code",
-        Title = "Country Code",
-        Width = 190,
-        IsVisible = true
-    });
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "Latitude",
-        Title = "Latitude",
-        Width = 110,
-        IsVisible = true,
-        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
-    });
-    grid.GridColumns.Add(new GridColumn()
-    {
-        ColumnName = "ValidFrom",
-        Title = "Valid From",
-        Width = 110,
-        IsVisible = true,
-        DisplayFormat = "dd-MMM-yyyy",
-        FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
-    });
-}
-@Html.OVCustomGrid(grid)
-
+﻿@model City
+@using CityDataSource
+<div style="height:100px"></div>
+<div id="main" class="table-header">
+    @{        
+        var grid = new DetailGrid<City>();
+        grid.CallbackValues.ActionName = "GetCitys";
+        grid.CallbackValues.ControllerName = "UIHelper";
+        grid.Name = "PagingCityGrid";
+        grid.PageSettings.PageSize = 10;
+        grid.PageSettings.IsPageable = true;
+        grid.FilterSettings.CanShowOperators = true;
+        grid.ShowRefresh = true;
+        grid.SelectionSettings.SelectionMode = SelectionMode.Multiple;
+        grid.SelectionSettings.SelectionType = SelectionType.CheckBox;
+        grid.ShowRefresh = true;
+        grid.SelectionSettings.CanSelect = true;
+        grid.SelectionSettings.IsSelectAll = true;
+        string template = string.Empty;
+        template += "<div id='" + grid.Name + "_ToolBar'>";
+        template += string.Format("<span id='{0}_Title' class='m-grid-title'>{1}</span>", grid.Name, grid.Title);
+        template += "<a href=\"#\" title=\"Export\" class=\"k-grid-excel\"><span class=\"pull-right\" style=\"margin-left: 20px; margin-right: 10px;  font-weight: normal;\"><i class=\"icon-file-download2 \" style=\" margin-right:10px;\"></i></span></a>";
+        template += string.Format("<a href=\"#\" onclick=\"MSCJS.HTMLHelpers.ClientEvents.Grid.FilterToggle('{0}')\" title=\"Filter\"><span class=\"icon-filter pull-right\"></span></a>", grid.Name);
+        template += string.Format("<a href=\"#\" title=\"Filter\" class=\"k-grid-save-changes\"><span>Save</span></a>");
+        template += "</div>";
+        grid.ToolBarSettings.Template = template;
+        grid.ExportToSettings = new ExportSettings() { ExcelExport = true, IsExportToEnabled = true };
+        grid.IdProperty = "Id";
+        grid.EditSettings.EditMode = EditMode.InCell;
+        grid.PageSettings.PageSize = 10;
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "Name",
+            Title = "Name",
+            Width = 200,            
+            IsVisible = true,
+            FilterSettings = new FilterSettings() { CanShowOperators = true, DefaultOperator = "contains", IsFilterByRow = true },
+        });
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "StateInfo",
+            TextField = "Name",
+            ValueField = "Id",
+            Title = "State",
+            Width = 180,
+            EditorType = "combobox",
+            ViewData = new { Action = "GetStates", Controller = "UIHelper" },
+            IsVisible = true
+        });
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "StateInfo.CountryInfo",
+            Title = "Country",
+            Width = 180,
+            IsVisible = true,
+            EditorType = "combobox",
+            ViewData = new { Action = "GetCountries", Controller = "UIHelper" },
+            TextField = "Name",
+            ValueField = "Id",
+        });
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "StateInfo.CountryInfo.Code",
+            Title = "Country Code",
+            Width = 100,
+            IsVisible = true
+        });
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "Latitude",
+            Title = "Latitude",
+            Width = 70,
+            IsVisible = true,
+            FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+        });
+        grid.GridColumns.Add(new GridColumn()
+        {
+            ColumnName = "ValidFrom",
+            Title = "Valid From",
+            Width = 110,
+            IsVisible = true,
+            DisplayFormat = "dd-MMM-yyyy",
+            EditorType = "datetimeEditor",
+            ViewData = new { isSystemDate = true , Property = "ValidFrom" },
+            FilterSettings = new FilterSettings() { CanShowOperators = false, DefaultOperator = "gte" }
+        });
+        @Html.OVDetailGrid(grid);
+    }
+</div>
 
